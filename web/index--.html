@@ -1,0 +1,132 @@
+
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+
+<form>
+
+  <input type="button" value="LOGIN" id="login" style="width:100px;cursor:pointer"/><br>
+
+
+</form>
+<div class="result"></div>
+<script src="js/jquery.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script>
+
+    function GetQueryString(name)
+    {
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if(r!=null)return  unescape(r[2]); return null;
+    }
+    $(function() {
+        if (GetQueryString("redirect") == "true") {
+            $.ajax({
+                type: "get",
+                url: "/testtest/testtest/shareBack?",
+                dataType: "text",
+                cache: false,
+                data: {"nowurl": encodeURIComponent(window.location.href.split('#')[0])},
+
+                success: function (data) {
+                    $(".result").html("hello login success");
+                    var json = $.parseJSON(data);
+
+                    wx.config({
+                        debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                        appId: json.appId, // 必填，公众号的唯一标识
+                        timestamp: json.timestamp, // 必填，生成签名的时间戳
+                        nonceStr: json.nonceStr, // 必填，生成签名的随机串
+                        signature: json.signature,// 必填，签名，见附录1
+                        jsApiList: ['onMenuShareAppMessage', 'onMenuShareTimeline', 'onMenuShareQQ', 'onMenuShareWeibo', 'onMenuShareQZone'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                    });
+                    wx.ready(function () {
+                        // 1 判断当前版本是否支持指定 JS 接口，支持批量判断
+
+                        wx.checkJsApi({
+                            jsApiList: [
+                                "onMenuShareTimeline",//分享到朋友圈,
+                                "onMenuShareAppMessage"//分享给朋友
+                            ],
+                            success: function (res) {
+                                alert(JSON.stringify(res));
+                            }
+                        });
+
+                        //下面就可以写一系列的接口了
+                        //朋友圈
+                        wx.onMenuShareTimeline({
+                            title: 'welcome', // 分享标题
+                            desc: 'welcome',
+                            link: json.shareurl, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                            imgUrl: json.logoimgurl, // 分享图标
+                            success: function () {
+                                // 用户点击了分享后执行的回调函数
+                                console.log("share success");
+                            }
+                        });
+                        //朋友
+                        wx.onMenuShareAppMessage({
+                            title: 'welcome', // 分享标题
+                            desc: '1234567', // 分享描述
+                            link: json.shareurl, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                            imgUrl: json.logoimgurl, // 分享图标
+                            type: '', // 分享类型,music、video或link，不填默认为link
+                            dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                            success: function () {
+                                // 用户点击了分享后执行的回调函数
+                            }
+                        });
+
+                    });
+
+
+                    wx.error(function (res) {
+                        alert(res.errMsg);
+                    });
+                }
+
+            });
+        }
+    });
+$("#login").on('click touchstart',function(){
+
+    $.ajax({
+      type:"GET",
+      url:"/testtest/testtest/wxLogin?",
+      dataType:"jsonp",
+      cache:false,
+      data:{},
+     complete : function(XMLHttpRequest, textStatus) {
+    // 通过XMLHttpRequest取得响应头，REDIRECT
+    var redirect = XMLHttpRequest.getResponseHeader("REDIRECT");//若HEADER中含有REDIRECT说明后端想重定向
+    //alert(redirect);
+    if (redirect == "REDIRECT") {
+      var win = window;
+      while (win != win.top){
+        win = win.top;
+      }
+      console.log(XMLHttpRequest.getResponseHeader("CONTEXTPATH"));
+      win.location.href= XMLHttpRequest.getResponseHeader("CONTEXTPATH");
+
+    }
+  },
+      success:function(data){
+
+
+
+
+      }
+
+    });
+
+
+});
+
+
+</script>
+</body>
+</html>

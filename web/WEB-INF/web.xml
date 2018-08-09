@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+    <servlet>
+        <servlet-name>LoginService</servlet-name>
+        <servlet-class>src.com.service.LoginService</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LoginService</servlet-name>
+        <url-pattern>/testtest/wxLogin</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>callBackService</servlet-name>
+        <servlet-class>src.com.service.callBackService</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>callBackService</servlet-name>
+        <url-pattern>/testtest/callBack</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>shareBackService</servlet-name>
+        <servlet-class>src.com.service.shareBackService</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>shareBackService</servlet-name>
+        <url-pattern>/testtest/shareBack</url-pattern>
+    </servlet-mapping>
+</web-app>
